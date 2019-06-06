@@ -30,6 +30,49 @@ namespace MusicsStore.Controllers
             return View(await _context.Songs.ToListAsync());
         }
 
+        // GET: Songs matching the search  string
+        public IActionResult Search(string searchFor)
+        {
+            if (searchFor.Equals(null))
+            {
+                return NotFound();
+            }
+            ViewBag.SearchTerm = searchFor;
+
+            searchFor = searchFor.ToLower();
+            string subSearch = searchFor.Substring(searchFor.IndexOf(":") + 1);
+           
+
+            List<Song> allSongs = _context.Songs.ToList();          
+            List<Song> songs;
+
+            if (searchFor.Contains("title"))
+            {
+                songs = allSongs.FindAll(s => s.title.ToLower().Contains(subSearch));
+            }
+            else if(searchFor.Contains("artist"))
+            {
+                 songs = allSongs.FindAll(s => s.Artist.ToLower().Contains(subSearch));
+            }
+            else if (searchFor.Contains("album"))
+            {
+                 songs = allSongs.FindAll(s => s.Album.ToLower().Contains(subSearch));
+            }
+            else
+            {
+                songs = allSongs.FindAll(s =>  s.title.ToLower().Contains(subSearch)
+                                            || s.Artist.ToLower().Contains(subSearch)
+                                            || s.Album.ToLower().Contains(subSearch));
+            }
+            if (songs == null)
+            {
+                return NotFound();
+            }
+
+            // return View("~/Views/Songs/Index.cshtml",songs);
+            return View(songs);
+        }
+
         // GET: Songs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -115,6 +158,7 @@ namespace MusicsStore.Controllers
                 }
                 //update song path
                 song.ImagePath = "uploads/albums/" + fileName;
+                
             }
 
             if (id != song.Id)

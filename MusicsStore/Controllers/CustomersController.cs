@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MusicsStore.Data;
 using MusicsStore.Models;
+using Microsoft.AspNetCore.Http;
+
 
 namespace MusicsStore.Controllers
 {
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _env;
 
-        public CustomersController(ApplicationDbContext context)
+        public CustomersController(ApplicationDbContext context, IHostingEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // GET: Customers
@@ -74,8 +80,20 @@ namespace MusicsStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Age,FavGenre,FavSong")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Id,Name,Age,FavGenre,FavSong,ImagePath")] Customer customer, IFormFile file)
         {
+            if (file != null)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var path = _env.WebRootPath + "\\uploads\\custphotos\\" + fileName;
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                //update song path
+                customer.ImagePath = "uploads/custphotos/" + fileName;
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(customer);
@@ -106,8 +124,21 @@ namespace MusicsStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Age,FavGenre,FavSong")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Age,FavGenre,FavSongImagePath")] Customer customer, IFormFile file)
         {
+            if (file != null)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var path = _env.WebRootPath + "\\uploads\\custphotos\\" + fileName;
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                //update song path
+                customer.ImagePath = "uploads/custphotos/" + fileName;
+            }
+
             if (id != customer.Id)
             {
                 return NotFound();

@@ -1,14 +1,13 @@
 ﻿@model IEnumerable<MusicsStore.Models.Song>
 
 @{
-    ViewData["Title"] = "Recommendations";
+    ViewData["Title"] = "Search";
 }
+<br />
+<br/>
+<br />
 
-<br />
-<br />
-<br />
-<h3><i>Recommendations for</i>:@ViewBag.Customers.Name</h3>
-<h3> Genre - @ViewBag.Customers.FavGenre</h3>
+<h2>You searched for <i> @ViewBag.SearchTerm</i></h2>
 
 <table class="table">
     <thead>
@@ -21,6 +20,12 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Album)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ReleaseDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Genre)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.ImagePath)
@@ -43,8 +48,16 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Album)
             </td>
+
             <td>
-                <img src="../../@Html.DisplayFor(modelItem => item.ImagePath)" height="100" width="100" />
+                @Html.DisplayFor(modelItem => item.ReleaseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre)
+            </td>
+
+            <td>
+                <img src="../../@Html.DisplayFor(modelItem => item.ImagePath)" alt="" height="100" width="100" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)

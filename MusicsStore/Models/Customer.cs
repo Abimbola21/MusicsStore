@@ -15,6 +15,8 @@ namespace MusicsStore.Models
         public string FavGenre { get; set; }
         [Display(Name = "Favorite Song")]
         public string FavSong { get; set; }
+        [Display(Name = "Photo")]
+        public string ImagePath { get; set; }
 
         public override string ToString()
         {

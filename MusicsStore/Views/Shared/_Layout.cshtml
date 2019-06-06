@@ -15,6 +15,10 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    <style>
+        .set-width {width:160px;}
+        .white {color: #fff;}
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -35,7 +39,14 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Songs">Songs</a></li>
                     <li><a asp-area="" asp-controller="Songs" asp-action="Index">Management Console</a></li>
                     <li><a asp-area="" asp-controller="Customers" asp-action="Index">Customer Management</a></li>
-                </ul>
+                </ul> 
+                    <form asp-controller="Songs" asp-action="Search">
+                            <div class="container ">
+                                <input name="searchFor" class="form-control set-width" />
+                                <span class="glyphicon glyphicon-search white"></span>
+                            </div>
+                        </form>
+               
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
